@@ -9,6 +9,10 @@ This project was built using Angular CLI,
 - ng serve --open
 this could take 4-5 seconds but it should eventually open a browser for you pointing localhost:4200/
 
+## Sample Image
+
+<img src="./src/assets/screenSample.PNG" width="600" alt="screenSample"/>
+
 # Features
  - Adding to favorites
  - Sort by any field on each table
@@ -17,5 +21,7 @@ this could take 4-5 seconds but it should eventually open a browser for you poin
 ## Contact
 Please feel free to reach out if you have any questions
 mustafa.bereket@outlook.com
+
+
 
 
