@@ -15,9 +15,20 @@ export class StockListComponent implements OnInit, AfterViewInit {
   currency = {};
   dataSourceStock = new MatTableDataSource([]);
   dataSourceCurrency = new MatTableDataSource([]);
-
-  favorites = [];
-  order = 'asc';
+  filterAssets = {
+    currency: ['GBP', 'NIS', 'EUR', 'USD'],
+    stocks: ['FB', 'TSLA', 'GOOGL', 'AAPL'],
+    stockFilter: {
+      name: '',
+      operator: '',
+      price: null
+    },
+    currencyFilter : {
+      name: '',
+      operator: '',
+      price: null
+    }
+  };
   @ViewChild(MatSort) sortStock: MatSort;
   @ViewChild(MatSort) sortCurrency: MatSort;
 
@@ -33,12 +44,16 @@ export class StockListComponent implements OnInit, AfterViewInit {
     this.data.getAssets.subscribe((assetList) => {
       this.updateAssets(assetList.stock, 'stocks');
       this.updateAssets(assetList.currency, 'currency');
-      this.dataSourceCurrency.data = Object.values(assetList.currency);
-      this.dataSourceStock.data = Object.values(assetList.stock);
-    });
-
-    this.data.favoritesSubscription.subscribe((data) => {
-      this.favorites = data;
+      this.dataSourceStock.data = this.filterBy(
+        'stocks',
+        this.filterAssets.stockFilter.name,
+        this.filterAssets.stockFilter.operator,
+        this.filterAssets.stockFilter.price);
+      this.dataSourceCurrency.data = this.filterBy(
+        'currency',
+        this.filterAssets.currencyFilter.name,
+        this.filterAssets.currencyFilter.operator,
+        this.filterAssets.currencyFilter.price);
     });
   }
 
@@ -48,12 +63,12 @@ export class StockListComponent implements OnInit, AfterViewInit {
   }
 
   addFavorite(id): void {
-    if (!this.favorites.includes(id)) {
+    if (!this.data.favorites.includes(id)) {
       this.data.addFavorite(id);
     }
   }
 
-  updateAssets(assetList, type) {
+  updateAssets(assetList, type): void {
     for (const key in assetList) {
       if (this[type][key]) {
         this[type][key].lastUpdate = assetList[key].lastUpdate;
@@ -62,5 +77,26 @@ export class StockListComponent implements OnInit, AfterViewInit {
         this[type][key] = assetList[key];
       }
     }
+  }
+
+  filterBy(assetType, filter, filterParam?, price?): any {
+    if (!filter){
+      return Object.values(this[assetType]);
+    }
+    return Object.values(this[assetType]).filter((obj: Asset) => {
+      if (filterParam){
+        return filterParam === '>' ? obj.price > price : obj.price < price;
+      } else {
+        return obj.assetName === filter;
+      }
+    });
+  }
+
+  clearFilters(type): void{
+    this.filterAssets[type + 'Filter'] = {
+      name: '',
+      operator: '',
+      price: null
+    };
   }
 }

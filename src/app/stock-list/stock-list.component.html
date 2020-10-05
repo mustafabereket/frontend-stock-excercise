@@ -1,88 +1,147 @@
+<div class="main">
+  <app-favorites [stocks]="stocks" [currency]="currency"></app-favorites>
+  <div class="main-container">
+    <h1>Stocks</h1>
+    <h1>Currency</h1>
 
-<div class="favorites">
-  <h2 *ngIf="!favorites.length" >ADD YOUR FAVORITE ASSETS HERE BY CLICKING ON THEM</h2>
-  <h2 *ngIf="favorites.length">FAVORITES </h2>
-  <div class="fav-area">
-    <div class="favorite" *ngFor="let item of favorites" >
-      <div *ngIf="item <= 200">
-        {{stocks[item].assetName}}{{stocks[item].id}}
-        <br/>
-        ${{stocks[item].price.toFixed(2)}}
-        <br/>
-        {{stocks[item].lastUpdate | date: 'mediumTime'}}
-        <br>
-        <span class="material-icons">stacked_line_chart</span>
+    <div class="filter-by">
+      <h2>Filter Stocks By: </h2>
+      <div class="filter-by-item">
+        <mat-chip-list aria-label="Delete Filters" *ngIf="filterAssets.stockFilter.name">
+          <mat-chip >{{filterAssets.stockFilter.name}}</mat-chip>
+        </mat-chip-list>
       </div>
-      <div *ngIf="item >200">
-        {{currency[item].assetName}}{{currency[item].id}}
-        <br/>
-        ${{currency[item].price.toFixed(2)}}
-        <br/>
-        {{currency[item].lastUpdate | date: 'mediumTime'}}
-        <br/>
-        <span class="material-icons">attach_money</span>
+      <div class="filter-by-item">
+        <mat-chip-list aria-label="Filter Type Selection" *ngIf="!filterAssets.stockFilter.name">
+          <mat-chip (click)="filterAssets.stockFilter.name='assetName'">Asset Name</mat-chip>
+          <mat-chip (click)="filterAssets.stockFilter.name='price'" >Price</mat-chip>
+        </mat-chip-list>
+      </div>
+      <div *ngIf="filterAssets.stockFilter.name==='assetName'" class="filter-by-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Asset Name</mat-label>
+          <mat-select [(ngModel)]="filterAssets.stockFilter.name">
+            <mat-option *ngFor="let stock of filterAssets.stocks" [value]="stock">
+              {{stock}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="filterAssets.stockFilter.name==='price'" class="filter-by-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Operator</mat-label>
+          <mat-select [(ngModel)]="filterAssets.stockFilter.operator">
+            <mat-option [value]="'>'"> Higher than (>) </mat-option>
+            <mat-option [value]="'<'"> Lower than (<)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <input class="price-input" type="number" [(ngModel)]="filterAssets.stockFilter.price" placeholder="Enter Price Here" >
+      </div>
+      <div class="filter-by-item">
+        <mat-chip-list aria-label="Delete Filters" *ngIf="filterAssets.stockFilter.name">
+          <mat-chip (click)="clearFilters('stock')">Clear Filters <span class="material-icons">delete</span></mat-chip>
+        </mat-chip-list>
       </div>
     </div>
+
+    <div class="filter-by">
+      <h2>Filter Currency By: </h2>
+      <div class="filter-by-item">
+        <mat-chip-list aria-label="Delete Filters" *ngIf="filterAssets.currencyFilter.name">
+          <mat-chip >{{filterAssets.currencyFilter.name}}</mat-chip>
+        </mat-chip-list>
+      </div>
+      <div class="filter-by-item">
+        <mat-chip-list aria-label="Filter Type Selection" *ngIf="!filterAssets.currencyFilter.name">
+          <mat-chip (click)="filterAssets.currencyFilter.name='assetName'">Asset Name</mat-chip>
+          <mat-chip (click)="filterAssets.currencyFilter.name='price'" >Price</mat-chip>
+        </mat-chip-list>
+      </div>
+      <div *ngIf="filterAssets.currencyFilter.name==='assetName'" class="filter-by-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Asset Name</mat-label>
+          <mat-select [(ngModel)]="filterAssets.currencyFilter.name">
+            <mat-option *ngFor="let stock of filterAssets.currency" [value]="stock">
+              {{stock}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="filterAssets.currencyFilter.name==='price'" class="filter-by-item">
+        <mat-form-field appearance="fill">
+          <mat-label>Operator</mat-label>
+          <mat-select [(ngModel)]="filterAssets.currencyFilter.operator">
+            <mat-option [value]="'>'"> Higher than (>) </mat-option>
+            <mat-option [value]="'<'"> Lower than (<)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <input class="price-input" type="number" [(ngModel)]="filterAssets.currencyFilter.price" placeholder="Enter Price Here" >
+      </div>
+      <div class="filter-by-item">
+        <mat-chip-list aria-label="Delete Filters" *ngIf="filterAssets.currencyFilter.name">
+          <mat-chip (click)="clearFilters('currency')">Clear Filters <span class="material-icons">delete</span></mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+
+
+    <div class="asset-container">
+      <table #table1 mat-table  [dataSource]="dataSourceStock" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> assetName </th>
+          <td mat-cell *matCellDef="let element"> {{element.assetName}}{{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> price </th>
+          <td mat-cell *matCellDef="let element"> ${{element.price.toFixed(2)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastUpdate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> lastUpdate </th>
+          <td mat-cell *matCellDef="let element"> {{element.lastUpdate | date: 'mediumTime'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="addFavorite(row.id)"></tr>
+      </table>
+    </div>
+
+
+    <div class="asset-container">
+
+      <table #table2 mat-table  [dataSource]="dataSourceCurrency" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> assetName </th>
+          <td mat-cell *matCellDef="let element"> {{element.assetName}}{{element.id}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> price </th>
+          <td mat-cell *matCellDef="let element"> ${{element.price.toFixed(2)}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastUpdate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> lastUpdate </th>
+          <td mat-cell *matCellDef="let element"> {{element.lastUpdate | date: 'mediumTime'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="addFavorite(row.id)"></tr>
+      </table>
+    </div>
   </div>
-</div>
-<div class="main-container">
-  <h1>Stocks</h1>
-  <h1>Currency</h1>
-
-  <div class="asset-container">
-    <table #table1 mat-table  [dataSource]="dataSourceStock" matSort class="mat-elevation-z8">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="assetName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> assetName </th>
-        <td mat-cell *matCellDef="let element"> {{element.assetName}}{{element.id}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> price </th>
-        <td mat-cell *matCellDef="let element"> ${{element.price.toFixed(2)}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="lastUpdate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> lastUpdate </th>
-        <td mat-cell *matCellDef="let element"> {{element.lastUpdate | date: 'mediumTime'}} </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="addFavorite(row.id)"></tr>
-    </table>
-  </div>
-
-<div class="asset-container">
-
-  <table #table2 mat-table  [dataSource]="dataSourceCurrency" matSort class="mat-elevation-z8">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="assetName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> assetName </th>
-      <td mat-cell *matCellDef="let element"> {{element.assetName}}{{element.id}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> price </th>
-      <td mat-cell *matCellDef="let element"> ${{element.price.toFixed(2)}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="lastUpdate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> lastUpdate </th>
-      <td mat-cell *matCellDef="let element"> {{element.lastUpdate | date: 'mediumTime'}} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="addFavorite(row.id)"></tr>
-  </table>
-</div>
-
 </div>
 

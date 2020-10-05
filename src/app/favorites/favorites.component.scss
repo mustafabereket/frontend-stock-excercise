@@ -1,0 +1,24 @@
+.favorites {
+  text-align: center;
+  background-color: #a7eca7;
+  margin-bottom: 0;
+  padding: 20px;
+  .fav-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+.favorite {
+  background-color: #2bac5c;
+  padding: 5px 5px;
+  margin: 3px 4px;
+  color: white;
+  font-size: 1.1em;
+  width: 80px;
+  height: 100px;
+  border: white solid;
+  border-radius: 12px;
+  box-shadow: 10px 6px 23px -3px rgba(0,0,0,0.75);
+}
+

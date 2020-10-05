@@ -1,3 +1,7 @@
+.main {
+  display: flex;
+  flex-direction: column;
+}
 .main-container {
   display: grid;
   margin: 40px auto;
@@ -13,7 +17,17 @@
 h1 {
   text-align: center;
 }
-
+.filter-by {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  .filter-by-item {
+    margin: 10px auto;
+  }
+}
 .asset-container {
   padding: 25px 10px;
   background-color: aliceblue;
@@ -32,18 +46,6 @@ h1 {
   box-shadow: 10px 6px 23px -3px rgba(0,0,0,0.75);
 }
 
-.favorites {
-  text-align: center;
-  background-color: #a7eca7;
-  margin-bottom: 0;
-  padding: 20px;
-  .fav-area {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-}
-
 tr {
   cursor: pointer;
 }
@@ -51,18 +53,18 @@ tr {
 .mat-row:hover {
   background-color: rgba(136, 246, 246, 0.3);
 }
-
-.favorite {
-  background-color: #2bac5c;
-  padding: 5px 5px;
-  margin: 3px 4px;
+.mat-chip {
+  background-color: #5b5bbe;
   color: white;
   font-size: 1.1em;
-  width: 80px;
-  height: 100px;
-  border: white solid;
+  cursor: pointer;
+  margin: 5px 10px;
+  align-self: center;
+}
+.price-input {
+  height: 30px;
   border-radius: 12px;
-  box-shadow: 10px 6px 23px -3px rgba(0,0,0,0.75);
-
+  margin: 5px 10px;
+  outline:none;
 }
 

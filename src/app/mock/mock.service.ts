@@ -8,7 +8,7 @@ export class MockService {
 
   assets: any[];
   assetSubscription: Subject<any> = new Subject<any>();
-  timeObservable = interval(1000);
+  timeObservable = interval(1111);
 
   createAsset = (assetId, assetType) => {
     return {

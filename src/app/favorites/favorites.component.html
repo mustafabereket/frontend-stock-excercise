@@ -1,0 +1,26 @@
+<div class="favorites">
+  <h2 *ngIf="!favorites.length" >ADD YOUR FAVORITE ASSETS HERE BY CLICKING ON THEM</h2>
+  <h2 *ngIf="favorites.length">FAVORITES </h2>
+  <div class="fav-area">
+    <div class="favorite" *ngFor="let item of favorites" >
+      <div *ngIf="item <= 200">
+        {{stocks[item].assetName}}{{stocks[item].id}}
+        <br/>
+        ${{stocks[item].price.toFixed(2)}}
+        <br/>
+        {{stocks[item].lastUpdate | date: 'mediumTime'}}
+        <br>
+        <span class="material-icons">stacked_line_chart</span>
+      </div>
+      <div *ngIf="item >200">
+        {{currency[item].assetName}}{{currency[item].id}}
+        <br/>
+        ${{currency[item].price.toFixed(2)}}
+        <br/>
+        {{currency[item].lastUpdate | date: 'mediumTime'}}
+        <br/>
+        <span class="material-icons">attach_money</span>
+      </div>
+    </div>
+  </div>
+</div>
